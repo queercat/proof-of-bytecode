@@ -1,5 +1,3 @@
-# lexer.py - Lexer for the language
-
 from tok import Token
 import re
 
