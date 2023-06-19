@@ -25,9 +25,8 @@ class Lexer:
     return (self.start, self.current, self.line)
   
   def match(self, text):
-    for w in self.keywords:
-      if text == w:
-        return w
+    if text in self.keywords:
+      return text
     return 
 
   def scan(self):
@@ -43,7 +42,7 @@ class Lexer:
         while self.current < len(self.source) and isNumber(c = self.source[self.current]): 
           self.current += 1
         lexeme = self.source[self.start:self.current]
-        self.tokens.append(Token(self.get_position(), lexeme, "Number"))
+        self.tokens.append(Token(self.get_position(), float(lexeme), "Number"))
         continue
 
       elif isAlphaNumeric(c):
@@ -59,6 +58,28 @@ class Lexer:
 
         self.tokens.append(Token(self.get_position(), lexeme, type))
         continue
+
+      elif c in ["+", "-", "/", "*"]:
+        lexeme = c
+        type = "Operator"
+        self.current += 1
+        self.tokens.append(Token(self.get_position(), lexeme, type))
+        continue
+
+      elif c == ";":
+        lexeme = c
+        type = "End-Statement"
+        self.current += 1
+        self.tokens.append(Token(self.get_position(), lexeme, type))
+        continue
+
+      elif c == "=":
+        lexeme = c
+        type = "Equals"
+        self.current += 1
+        self.tokens.append(Token(self.get_position(), lexeme, type))
+        continue
+
 
     EOF = Token((self.current, self.line), "EOF", "EOF")
     self.tokens.append(EOF)
